@@ -1,12 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import LoginModal from "../components/LoginModal";
+import poster from "../assets/poster.jpg";
 
 const projects = {
   1: {
     name: "AI 기반 도서 추천 시스템",
     team: "1조",
-    image: "https://source.unsplash.com/400x300/?technology,book",
+    image: poster,
   },
   2: {
     name: "스마트 홈 자동화",
@@ -81,7 +82,7 @@ const ProjectDetail = () => {
         <img
           src={project.image}
           alt={`포스터 - ${project.name}`}
-          className="w-full h-64 object-cover rounded-md mb-4"
+          className="w-full max-w-md h-auto object-contain rounded-md mb-4"
         />
 
         {/* 프로젝트 정보 */}
