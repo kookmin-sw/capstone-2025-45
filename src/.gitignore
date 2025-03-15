@@ -1,0 +1,6 @@
+# Node.js 관련 폴더 & 파일 제외
+node_modules/
+dist/
+.env
+.DS_Store
+.vscode/
