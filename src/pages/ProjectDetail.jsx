@@ -102,13 +102,6 @@ const ProjectDetail = () => {
           {votedProjects.includes(id) ? "이미 투표 완료" : "투표하기"}
         </button>
 
-        {/* 투표 완료 버튼 */}
-        <button
-          onClick={() => navigate("/vote-complete")}
-          className="mt-4 px-6 py-2 w-full bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          투표 완료
-        </button>
       </div>
 
       {/* 로그인 팝업 */}
