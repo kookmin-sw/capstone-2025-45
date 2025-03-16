@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { app } from "../firebase";
 
 const db = getFirestore(app);
@@ -48,3 +48,22 @@ export const voteForProject = async (userId, projectId) => {
     });
   }
 };
+
+// 🔹 Firestore에서 투표 수가 가장 많은 상위 3개 프로젝트 가져오기
+export const getTopProjects = async () => {
+    try {
+      const projectsRef = collection(db, "projects"); // "projects" 컬렉션에서 데이터 가져오기
+      const topProjectsQuery = query(projectsRef, orderBy("votes", "desc"), limit(3));
+      const querySnapshot = await getDocs(topProjectsQuery);
+  
+      const topProjects = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+  
+      return topProjects;
+    } catch (error) {
+      console.error("🔥 Firestore 데이터 불러오기 오류:", error);
+      return [];
+    }
+  };

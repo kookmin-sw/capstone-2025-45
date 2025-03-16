@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
+import { getTopProjects } from "../utils/firebaseVoting";
 
 const Home = () => {
   const [topProjects, setTopProjects] = useState([]);
 
-  // 🔹 더미 데이터 (실제 Firebase Firestore에서 데이터를 불러올 예정)
   useEffect(() => {
-    const dummyData = [
-      { id: 1, name: "AI 기반 도서 추천 시스템", votes: 120 },
-      { id: 4, name: "스마트 홈 자동화", votes: 95 },
-      { id: 68, name: "친환경 배터리 연구", votes: 80 },
-    ];
+    const fetchTopProjects = async () => {
+      const projects = await getTopProjects();
+      setTopProjects(projects);
+    };
 
-    // 2분마다 데이터 업데이트 (실제 Firestore 연동 시 Firestore에서 가져올 예정)
+    fetchTopProjects(); // 처음 실행 시 데이터를 불러옴
+
+    // 🔹 2분마다 Firestore에서 새로운 데이터 불러오기
     const interval = setInterval(() => {
-      setTopProjects(dummyData);
-    }, 2000); // 🔹 2초마다 업데이트 (테스트용, 실제 환경에서는 2분으로 설정)
+      fetchTopProjects();
+    }, 120000); // 120000ms = 2분
 
     return () => clearInterval(interval);
   }, []);
@@ -35,17 +36,20 @@ const Home = () => {
           <p className="mt-2 text-sm text-gray-500">
             *2분마다 자동 집계됩니다.
           </p>
-          {topProjects.map((project, index) => {
-            const medals = ["🥇", "🥈", "🥉"]; // 금, 은, 동 메달 이모지
-            return (
-              <div key={project.id} className="mt-2">
-                <p className="text-base md:text-lg font-medium">
-                {medals[index]} [{project.id}조] {project.name} (
-                  {project.votes}표)
-                </p>
-              </div>
-            );
-          })}
+          {topProjects.length === 0 ? (
+            <p className="text-gray-500 mt-4">데이터를 불러오는 중...</p>
+          ) : (
+            topProjects.map((project, index) => {
+              const medals = ["🥇", "🥈", "🥉"]; // 금, 은, 동 메달 이모지
+              return (
+                <div key={project.id} className="mt-2">
+                  <p className="text-base md:text-lg font-medium">
+                    {medals[index]} [{project.id}조] {project.name} ({project.votes}표)
+                  </p>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

@@ -2,14 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-// 🔹 Firebase 프로젝트 설정 (Firebase 콘솔에서 확인)
+// 🔹 Firebase 프로젝트 설정
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBht47SshlP__odjhozDHvalDVNXt80Qlc",
+  authDomain: "capstone-vote.firebaseapp.com",
+  projectId: "capstone-vote",
+  storageBucket: "capstone-vote.firebasestorage.app",
+  messagingSenderId: "561426459243",
+  appId: "1:561426459243:web:5e59cc7c2083e30260df2e",
 };
 
 // 🔹 Firebase 초기화
