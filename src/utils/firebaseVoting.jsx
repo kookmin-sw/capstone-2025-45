@@ -67,3 +67,22 @@ export const getTopProjects = async () => {
       return [];
     }
   };
+
+// 🔹 Firestore에서 특정 프로젝트 가져오기
+export const getProjectById = async (projectId) => {
+  try {
+    const projectRef = doc(db, "projects", projectId);
+    const docSnap = await getDoc(projectRef);
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      console.warn(`⚠ 프로젝트 ${projectId}를 찾을 수 없습니다.`);
+      return null;
+    }
+  } catch (error) {
+    console.error("🔥 Firestore 데이터 불러오기 오류:", error);
+    return null;
+  }
+};
+

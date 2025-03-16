@@ -1,43 +1,42 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getProjectById } from "../utils/firebaseVoting";
 import LoginModal from "../components/LoginModal";
-import poster from "../assets/poster.jpg";
-
-const projects = {
-  1: {
-    name: "AI 기반 도서 추천 시스템",
-    team: "1조",
-    image: poster,
-  },
-  2: {
-    name: "스마트 홈 자동화",
-    team: "2조",
-    image: "https://source.unsplash.com/400x300/?smart-home,technology",
-  },
-  3: {
-    name: "친환경 배터리 연구",
-    team: "3조",
-    image: "https://source.unsplash.com/400x300/?battery,eco",
-  },
-};
 
 const ProjectDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [project, setProject] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({ studentId: "", name: "" });
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAlreadyVotedModal, setShowAlreadyVotedModal] = useState(false);
   const [votedProjects, setVotedProjects] = useState([]);
 
-  const project = projects[id];
+  // 🔹 Firestore에서 프로젝트 데이터 가져오기
+  useEffect(() => {
+    const fetchProject = async () => {
+      const projectData = await getProjectById(id);
+      setProject(projectData);
+      setIsLoading(false);
+    };
+
+    fetchProject();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p className="text-xl font-bold text-gray-700">📡 데이터 불러오는 중...</p>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-2xl font-bold text-red-500">
-          ❌ 프로젝트를 찾을 수 없습니다.
-        </h1>
+        <h1 className="text-2xl font-bold text-red-500">❌ 프로젝트를 찾을 수 없습니다.</h1>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -101,27 +100,19 @@ const ProjectDetail = () => {
         >
           {votedProjects.includes(id) ? "이미 투표 완료" : "투표하기"}
         </button>
-
       </div>
 
       {/* 로그인 팝업 */}
       {showLoginModal && (
-        <LoginModal
-          onClose={() => setShowLoginModal(false)}
-          onLogin={handleLogin}
-        />
+        <LoginModal onClose={() => setShowLoginModal(false)} onLogin={handleLogin} />
       )}
 
       {/* 이미 투표한 경우 경고 모달 */}
       {showAlreadyVotedModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-xl font-bold mb-4 text-red-500">
-              ⚠ 이미 투표했습니다!
-            </h2>
-            <p className="text-gray-700 mb-4">
-              한 프로젝트에는 한 번만 투표할 수 있습니다.
-            </p>
+            <h2 className="text-xl font-bold mb-4 text-red-500">⚠ 이미 투표했습니다!</h2>
+            <p className="text-gray-700 mb-4">한 프로젝트에는 한 번만 투표할 수 있습니다.</p>
             <button
               onClick={() => setShowAlreadyVotedModal(false)}
               className="px-4 py-2 bg-gray-500 text-white rounded"
