@@ -3,6 +3,25 @@ import { app } from "../firebase";
 
 const db = getFirestore(app);
 
+// 🔹 Firestore에서 모든 프로젝트 가져오기
+export const getAllProjects = async () => {
+  try {
+    const projectsRef = collection(db, "projects"); // "projects" 컬렉션에서 데이터 가져오기
+    const querySnapshot = await getDocs(projectsRef);
+
+    const projects = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return projects;
+  } catch (error) {
+    console.error("🔥 Firestore 데이터 불러오기 오류:", error);
+    return [];
+  }
+};
+
+
 // 🔹 Firestore에서 사용자의 투표 내역 가져오기
 export const getUserVotes = async (userId) => {
   if (!userId) return { votedProjects: [], remainingVotes: 3 };
