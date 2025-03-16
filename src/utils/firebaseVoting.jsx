@@ -26,15 +26,22 @@ export const getAllProjects = async () => {
 export const getUserVotes = async (userId) => {
   if (!userId) return { votedProjects: [], remainingVotes: 3 };
 
-  const userVoteRef = doc(db, "votes", `${userId}_vote`);
-  const docSnap = await getDoc(userVoteRef);
+  try {
+    const userVoteRef = doc(db, "votes", userId);
+    const docSnap = await getDoc(userVoteRef);
 
-  if (docSnap.exists()) {
-    return docSnap.data();
-  } else {
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      console.warn(`⚠ 사용자 ${userId}의 투표 내역이 없습니다.`);
+      return { votedProjects: [], remainingVotes: 3 };
+    }
+  } catch (error) {
+    console.error("🔥 Firestore 데이터 불러오기 오류:", error);
     return { votedProjects: [], remainingVotes: 3 };
   }
 };
+
 
 // 🔹 Firestore에 투표 데이터 저장
 export const voteForProject = async (userId, projectId) => {

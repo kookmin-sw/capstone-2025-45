@@ -1,24 +1,33 @@
 import { useEffect, useState } from "react";
 import { getUserVotes } from "../utils/firebaseVoting";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const My = () => {
   const [votedProjects, setVotedProjects] = useState([]);
   const [remainingVotes, setRemainingVotes] = useState(3);
+  const [user, setUser] = useState(null);
   const auth = getAuth();
-  const user = auth.currentUser;
 
   useEffect(() => {
-    if (!user) return;
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        fetchUserVotes(currentUser.uid);
+      } else {
+        setUser(null);
+        setVotedProjects([]);
+        setRemainingVotes(3);
+      }
+    });
 
-    const fetchUserVotes = async () => {
-      const voteData = await getUserVotes(user.uid);
-      setVotedProjects(voteData.votedProjects || []);
-      setRemainingVotes(voteData.remainingVotes || 3);
-    };
+    return () => unsubscribe();
+  }, []);
 
-    fetchUserVotes();
-  }, [user]);
+  const fetchUserVotes = async (userId) => {
+    const voteData = await getUserVotes(userId);
+    setVotedProjects(voteData.votedProjects || []);
+    setRemainingVotes(voteData.remainingVotes || 3);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
