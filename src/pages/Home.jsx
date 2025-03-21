@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTopProjects } from "../utils/firebaseVoting";
+import LoginModal from "../components/LoginModal";
 
 const Home = () => {
   const [topProjects, setTopProjects] = useState([]);
@@ -27,6 +28,8 @@ const Home = () => {
           2025 캡스톤 프로젝트 전시전
         </h1>
         <p className="text-gray-700">QR 코드를 스캔하고 투표하세요!</p>
+
+        <LoginModal />
 
         {/* 🔹 TOP 3 프로젝트 표시 */}
         <div className="mt-6 w-full bg-white border border-gray-300 rounded-lg shadow-md p-5">
