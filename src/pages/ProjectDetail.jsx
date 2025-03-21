@@ -59,7 +59,7 @@ const ProjectDetail = () => {
     }
 
     setVotedProjects([...votedProjects, id]);
-    alert(`투표 완료! 프로젝트 ${id}`);
+    alert(`투표 완료! 프로젝트 ${project.team}조`);
     navigate("/vote-complete");
   };
 
@@ -79,14 +79,16 @@ const ProjectDetail = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full text-center">
         {/* 포스터 이미지 */}
         <img
-          src={project.image}
-          alt={`포스터 - ${project.name}`}
+          src={project.poster}
+          alt={`포스터 - ${project.project}`}
           className="w-full max-w-md h-auto object-contain rounded-md mb-4"
         />
 
         {/* 프로젝트 정보 */}
-        <h1 className="text-3xl font-bold text-gray-800">{project.name}</h1>
-        <p className="text-lg text-gray-600 mt-2">{project.team}</p>
+        <h1 className="text-3xl font-bold text-gray-800">{project.project}</h1>
+        <p className="text-lg text-gray-600 mt-2">[{project.team}조]</p>
+        <p className="text-sm text-gray-500 mt-2">유형: {project.type}</p>
+        <p className="text-sm mt-2">{project.description}</p>
 
         {/* 투표 버튼 */}
         <button

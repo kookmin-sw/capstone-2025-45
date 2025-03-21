@@ -28,7 +28,10 @@ const Projects = () => {
               onClick={() => navigate(`/project/${project.id}`)}
               className="block w-full bg-white p-4 mb-2 border rounded-lg shadow-md hover:bg-gray-100 text-left"
             >
-              <span className="font-semibold text-blue-500">{project.team}</span> {project.name}
+              <span className="font-semibold text-blue-500">
+                [{project.team}조]
+              </span>{" "}
+              {project.project}
             </button>
           ))
         )}

@@ -29,8 +29,6 @@ const Home = () => {
         </h1>
         <p className="text-gray-700">QR 코드를 스캔하고 투표하세요!</p>
 
-        <LoginModal />
-
         {/* 🔹 TOP 3 프로젝트 표시 */}
         <div className="mt-6 w-full bg-white border border-gray-300 rounded-lg shadow-md p-5">
           <h2 className="text-lg md:text-xl font-semibold">
@@ -45,11 +43,10 @@ const Home = () => {
             topProjects.map((project, index) => {
               const medals = ["🥇", "🥈", "🥉"]; // 금, 은, 동 메달 이모지
               return (
-                <div key={project.id} className="mt-2">
-                  <p className="text-base md:text-lg font-medium">
-                    {medals[index]} [{project.id}조] {project.name} ({project.votes}표)
-                  </p>
-                </div>
+                <p className="text-base md:text-lg font-medium mt-2">
+                  {medals[index]} [{project.team}조] {project.project} (
+                  {project.votes}표)
+                </p>
               );
             })
           )}
