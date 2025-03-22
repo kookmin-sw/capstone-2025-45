@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { getProjectById, updateUserVotes, getUserData } from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import LoginModal from "../components/LoginModal";
+import { useSearchParams } from "react-router-dom";
+
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -40,6 +42,18 @@ const ProjectDetail = () => {
     fetchProject();
   }, [id]);
 
+  const [qrToken, setQrToken] = useState(null);
+const [searchParams] = useSearchParams();
+
+useEffect(() => {
+  const token = searchParams.get("qr");
+  if (token) {
+    setQrToken(token);
+    // 주소창에서 ?qr=abc123 숨기기
+    window.history.replaceState({}, "", `/project/${id}`);
+  }
+}, [searchParams, id]);
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
@@ -47,6 +61,8 @@ const ProjectDetail = () => {
       </div>
     );
   }
+
+
 
   if (!project) {
     return (
