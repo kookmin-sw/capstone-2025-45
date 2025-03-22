@@ -82,7 +82,7 @@ useEffect(() => {
 
     console.log(qrToken, project.validToken);
     if (!qrToken || qrToken !== project.validToken) {
-      alert("⚠️ QR 코드가 유효하지 않습니다.");
+      alert("⚠️ QR 코드를 인식을 통해 투표해주세요.");
       return;
     }
 
