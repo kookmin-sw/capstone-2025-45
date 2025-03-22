@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "capstone-vote"
-  }
+    "default": "kmu-capstone-vote"
+  },
+  "targets": {},
+  "etags": {}
 }

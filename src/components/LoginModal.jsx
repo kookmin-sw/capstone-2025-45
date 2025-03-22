@@ -10,8 +10,8 @@ const LoginModal = ({ onClose }) => {
 
   const handleLogin = async () => {
     try {
-      const loggedInUser = await signInWithOIDC();
-      setUser(loggedInUser);
+      console.log("로그인 시도 중...");
+      await signInWithOIDC(); // 리디렉션 발생 후 이동하므로 아래는 실행되지 않음
     } catch (error) {
       console.error("로그인 오류:", error);
     }
