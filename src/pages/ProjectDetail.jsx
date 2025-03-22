@@ -79,6 +79,13 @@ useEffect(() => {
   }
 
   const handleVote = async () => {
+
+    console.log(qrToken, project.validToken);
+    if (!qrToken || qrToken !== project.validToken) {
+      alert("⚠️ QR 코드가 유효하지 않습니다.");
+      return;
+    }
+
     if (!user) {
       setShowLoginModal(true); // 🔹 로그인하지 않은 경우 로그인 모달 표시
       return;
