@@ -6,34 +6,45 @@ import Projects from "./pages/Projects";
 import My from "./pages/My";
 import NavigationBar from "./components/NavigationBar";
 import { useEffect } from "react";
-import { handleRedirectLoginResult } from "./utils/firebaseAuth";
+import { handleRedirectLoginResult, saveUserToFirestore, sendTokenToKookmin } from "./utils/firebaseAuth";
 import { getRedirectResult, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 
 const App = () => {
   
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        console.log("✅ 로그인된 사용자:", user);
-      } else {
-        try {
-          const result = await getRedirectResult(auth);
-          if (result?.user) {
-            console.log("✅ 리디렉션 로그인 성공:", result.user);
-            await saveUserToFirestore(result.user);
-            await sendTokenToKookmin(result.user);
-          } else {
-            console.log("❌ 리디렉션 결과도 없음");
-          }
-        } catch (error) {
-          console.error("🔥 getRedirectResult 오류:", error);
+    const handleLogin = async () => {
+      try {
+        // 1️⃣ 리디렉션 결과 우선 처리
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          console.log("✅ getRedirectResult 로그인 성공:", result.user);
+          await saveUserToFirestore(result.user);
+          await sendTokenToKookmin(result.user);
+          return;
         }
-      }
-    });
 
-    return () => unsubscribe(); // cleanup
+        // 2️⃣ fallback - 이미 로그인되어 있는 상태일 경우
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            console.log("✅ fallback 로그인된 사용자:", user);
+            await saveUserToFirestore(user); // 이 경우에도 저장되도록 보장
+            await sendTokenToKookmin(user);
+          } else {
+            console.log("❌ 로그인된 사용자 없음");
+          }
+        });
+
+        return () => unsubscribe();
+      } catch (error) {
+        console.error("🔥 로그인 처리 중 오류:", error);
+      }
+    };
+
+    handleLogin();
   }, []);
+
+  
 
   return (
     <Router>

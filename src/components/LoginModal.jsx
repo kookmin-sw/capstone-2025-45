@@ -16,6 +16,7 @@ const LoginModal = ({ onClose }) => {
       console.error("로그인 오류:", error);
     }
   };
+  
 
   const handleLogout = async () => {
     await signOutUser();
