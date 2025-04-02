@@ -5,9 +5,10 @@ import path from "path";
 
 // 프로젝트 ID와 토큰 목록 (예시)
 const projects = [
-  { id: "1", token: "abc123" },
-  { id: "2", token: "def456" },
-  { id: "3", token: "ghi789" },
+  { id: "1", token: "123abc" },
+  { id: "2", token: "456def" },
+  { id: "3", token: "789ghi" },
+  { id: "4", token: "111aaa" },
 ];
 
 const outputDir = "./output";

@@ -88,7 +88,7 @@ const ProjectDetail = () => {
     }
 
     if (!qrToken || qrToken !== project.validToken) {
-      alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
+      alert("⚠️ 개별 프로젝트 QR 인식을 통해 투표할 수 있어요.");
       return;
     }
 
