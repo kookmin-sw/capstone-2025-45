@@ -30,7 +30,7 @@ export const getTopProjects = async () => {
 export const getProjectById = async (projectId) => {
   try {
     const projectRef = doc(db, "projects", projectId);
-    const docSnap = await getDoc(projectRef);
+    const docSnap = await getDoc(projectRef, { source: "server" });
 
     if (docSnap.exists()) {
       return {

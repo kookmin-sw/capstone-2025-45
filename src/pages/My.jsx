@@ -5,7 +5,6 @@ import { signInWithOIDC, signOutUser } from "../utils/firebaseAuth";
 
 const My = () => {
   const [votedProjects, setVotedProjects] = useState([]);
-  const [remainingVotes, setRemainingVotes] = useState(3);
   const [user, setUser] = useState(null);
   const [loginStatus, setLoginStatus] = useState("idle"); // "idle", "loading", "authenticated"
   const auth = getAuth();
@@ -19,7 +18,6 @@ const My = () => {
       } else {
         setUser(null);
         setVotedProjects([]);
-        setRemainingVotes(3);
         setLoginStatus("idle");
       }
     });
@@ -29,7 +27,6 @@ const My = () => {
   const fetchUserVotes = async (userId) => {
     const voteData = await getUserVotes(userId);
     setVotedProjects(voteData.votedProjects || []);
-    setRemainingVotes(voteData.votesRemaining || 3);
   };
 
   const handleLogin = async () => {
@@ -65,7 +62,7 @@ const My = () => {
         <>
           <p className="text-gray-700">총 3회 투표 가능</p>
           <p className="text-lg font-semibold mt-2">
-            남은 투표 횟수: {remainingVotes}
+            남은 투표 횟수: {3-votedProjects.length}
           </p>
 
           <h2 className="text-xl font-bold mt-6 mb-4">투표 내역</h2>
