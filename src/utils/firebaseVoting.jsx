@@ -40,7 +40,8 @@ export const getProjectById = async (projectId) => {
         type: docSnap.data().type,
         description: docSnap.data().description, // 프로젝트 소개글
         poster: docSnap.data().poster,
-        votes: docSnap.data().votes || 0
+        votes: docSnap.data().votes || 0,
+        validToken: docSnap.data().validToken // QR 코드 인식 후 유효성 검사용 토큰
       };
     } else {
       console.warn(`⚠ 프로젝트 ${projectId}를 찾을 수 없습니다.`);

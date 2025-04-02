@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getTopProjects } from "../utils/firebaseVoting";
-import LoginModal from "../components/LoginModal";
 
 const Home = () => {
   const [topProjects, setTopProjects] = useState([]);

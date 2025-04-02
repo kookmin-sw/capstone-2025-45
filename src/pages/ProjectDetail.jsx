@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getProjectById, updateUserVotes, getUserData } from "../utils/firebaseVoting";
+import {
+  getProjectById,
+  updateUserVotes,
+  getUserData,
+} from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import LoginModal from "../components/LoginModal";
 import { useSearchParams } from "react-router-dom";
-
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -15,7 +17,6 @@ const ProjectDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAlreadyVotedModal, setShowAlreadyVotedModal] = useState(false);
 
   // 🔹 로그인 상태 확인
@@ -37,37 +38,40 @@ const ProjectDetail = () => {
       const projectData = await getProjectById(id);
       setProject(projectData);
       setIsLoading(false);
+      console.log(projectData);
     };
 
     fetchProject();
   }, [id]);
 
   const [qrToken, setQrToken] = useState(null);
-const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-useEffect(() => {
-  const token = searchParams.get("qr");
-  if (token) {
-    setQrToken(token);
-    // 주소창에서 ?qr=abc123 숨기기
-    window.history.replaceState({}, "", `/project/${id}`);
-  }
-}, [searchParams, id]);
+  useEffect(() => {
+    const token = searchParams.get("qr");
+    if (token) {
+      setQrToken(token);
+      // 주소창에서 ?qr=abc123 숨기기
+      window.history.replaceState({}, "", `/project/${id}`);
+    }
+  }, [searchParams, id]);
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <p className="text-xl font-bold text-gray-700">📡 데이터 불러오는 중...</p>
+        <p className="text-xl font-bold text-gray-700">
+          📡 데이터 불러오는 중...
+        </p>
       </div>
     );
   }
 
-
-
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-2xl font-bold text-red-500">❌ 프로젝트를 찾을 수 없습니다.</h1>
+        <h1 className="text-2xl font-bold text-red-500">
+          ❌ 프로젝트를 찾을 수 없습니다.
+        </h1>
         <button
           onClick={() => navigate("/")}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -79,29 +83,38 @@ useEffect(() => {
   }
 
   const handleVote = async () => {
-
-    console.log(qrToken, project.validToken);
-    if (!qrToken || qrToken !== project.validToken) {
-      // alert("⚠️ QR 코드를 인식을 통해 투표해주세요.");
-      alert(qrToken);
-      return;
-    }
-
     if (!user) {
-      setShowLoginModal(true); // 🔹 로그인하지 않은 경우 로그인 모달 표시
+      navigate("/my"); // 🔹 로그인하지 않으면 My 페이지로 바로 이동
       return;
     }
 
-    if (userData?.votedProjects.includes(id)) {
+    if (!qrToken || qrToken !== project.validToken) {
+      alert(qrToken, project.validToken);
+      // alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
+      return;
+    }
+
+    if (!userData) {
+      alert("⚠️ 사용자 정보를 불러오는 데 실패했습니다.");
+      return;
+    }
+
+    if (userData.votedProjects.includes(id)) {
       setShowAlreadyVotedModal(true);
       return;
     }
 
+    if (userData.votesRemaining <= 0) {
+      alert("⚠️ 투표 횟수를 모두 사용했습니다.");
+      return;
+    }
+
     try {
-      await updateUserVotes(user.uid, id);
+      await updateUserVotes(user.uid, id); // 🔹 Firestore 업데이트
       alert(`✅ 투표 완료! ${project.team}조`);
       navigate("/vote-complete");
     } catch (error) {
+      console.error("🔥 투표 오류:", error);
       alert(`⚠️ ${error.message}`);
     }
   };
@@ -132,7 +145,9 @@ useEffect(() => {
         <button
           onClick={handleVote}
           className={`mt-4 px-6 py-2 w-full rounded text-white ${
-            userData?.votedProjects.includes(id) ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600"
+            userData?.votedProjects.includes(id)
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-500 hover:bg-green-600"
           }`}
           disabled={userData?.votedProjects.includes(id)}
         >
@@ -140,15 +155,16 @@ useEffect(() => {
         </button>
       </div>
 
-      {/* 로그인 팝업 */}
-      {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
-
       {/* 이미 투표한 경우 경고 모달 */}
       {showAlreadyVotedModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-xl font-bold mb-4 text-red-500">⚠ 이미 투표했습니다!</h2>
-            <p className="text-gray-700 mb-4">한 프로젝트에는 한 번만 투표할 수 있습니다.</p>
+            <h2 className="text-xl font-bold mb-4 text-red-500">
+              ⚠ 이미 투표했습니다!
+            </h2>
+            <p className="text-gray-700 mb-4">
+              한 프로젝트에는 한 번만 투표할 수 있습니다.
+            </p>
             <button
               onClick={() => setShowAlreadyVotedModal(false)}
               className="px-4 py-2 bg-gray-500 text-white rounded"
