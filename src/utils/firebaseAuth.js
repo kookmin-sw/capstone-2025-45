@@ -5,12 +5,22 @@ import {
   OAuthProvider,
   signOut,
   onAuthStateChanged,
+  signInWithPopup,
+  GoogleAuthProvider
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { app } from "../firebase";
+// import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+export const signInWithGoogle = async () => {
+  const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider).then((data) => {
+      console.log(data);
+    }).catch((err) => console.log(err));
+}
 
 // 🔹 로그인 시도 (리디렉션 방식)
 export const signInWithOIDC = async () => {

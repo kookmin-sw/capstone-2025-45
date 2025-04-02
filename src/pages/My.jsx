@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUserVotes } from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { signInWithOIDC, signOutUser } from "../utils/firebaseAuth";
+import { signInWithGoogle, signInWithOIDC, signOutUser } from "../utils/firebaseAuth";
 
 const My = () => {
   const [votedProjects, setVotedProjects] = useState([]);
@@ -32,7 +32,8 @@ const My = () => {
   const handleLogin = async () => {
     setLoginStatus("loading");
     try {
-      await signInWithOIDC(); // 리디렉션 발생
+      // await signInWithOIDC(); // 리디렉션 발생
+      await signInWithGoogle();
     } catch (error) {
       console.error("로그인 오류:", error);
       setLoginStatus("idle");
@@ -95,7 +96,7 @@ const My = () => {
             onClick={handleLogin}
             className="px-4 py-2 bg-blue-500 text-white rounded"
           >
-            학교 계정으로 로그인
+            로그인
           </button>
         </>
       )}

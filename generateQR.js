@@ -23,8 +23,8 @@ projects.forEach(async ({ id, token }) => {
 
   try {
     await QRCode.toFile(outputPath, url);
-    console.log(`✅ project-${id} QR 생성 완료: ${url}`);
+    console.log(`project-${id} QR 생성 완료: ${url}`);
   } catch (err) {
-    console.error(`❌ project-${id} QR 생성 실패`, err);
+    console.error(`project-${id} QR 생성 실패`, err);
   }
 });

@@ -38,7 +38,6 @@ const ProjectDetail = () => {
       const projectData = await getProjectById(id);
       setProject(projectData);
       setIsLoading(false);
-      console.log(projectData);
     };
 
     fetchProject();
@@ -89,8 +88,7 @@ const ProjectDetail = () => {
     }
 
     if (!qrToken || qrToken !== project.validToken) {
-      alert(qrToken, project.validToken);
-      // alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
+      alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
       return;
     }
 
