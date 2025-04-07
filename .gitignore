@@ -25,3 +25,7 @@ dist-ssr
 
 # Firebase 설정 파일 제외
 src/firebase.js
+
+# 관리자 기능 제외
+tools/
+output/
