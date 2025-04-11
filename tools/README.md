@@ -35,7 +35,7 @@ mv ~/Downloads/serviceAccountKey.json tools/
 ## 🗳 3. QR 코드 생성
 
 ### ✅ 목적
-각 프로젝트리트에 대한 QR 코드 자동 생성 + 나수 토큰 만들기
+각 프로젝트리트에 대한 QR 코드 자동 생성 + 난수 토큰 만들기
 
 ### ☑️ 사전 조건
 - `generateQR.js` 내부에서 프로젝트 개수 설정 (Array.from)
