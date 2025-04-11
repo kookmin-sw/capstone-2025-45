@@ -27,5 +27,5 @@ dist-ssr
 src/firebase.js
 
 # 관리자 기능 제외
-tools/
 output/
+tools/serviceAccountKey.json
