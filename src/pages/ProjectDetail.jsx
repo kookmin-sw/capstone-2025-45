@@ -7,6 +7,10 @@ import {
 } from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useSearchParams } from "react-router-dom";
+import {
+  getDistanceFromLatLonInKm,
+  EXHIBITION_COORDS,
+} from "../utils/geoUtils";
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -83,12 +87,12 @@ const ProjectDetail = () => {
 
   const handleVote = async () => {
     if (!user) {
-      navigate("/my"); // 🔹 로그인하지 않으면 My 페이지로 바로 이동
+      navigate("/my");
       return;
     }
 
     if (!qrToken || qrToken !== project.validToken) {
-      alert("⚠️ 개별 프로젝트 QR 인식을 통해 투표할 수 있어요.");
+      alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
       return;
     }
 
@@ -107,13 +111,47 @@ const ProjectDetail = () => {
       return;
     }
 
+    // ✅ 위치 요청 & 거리 계산
     try {
-      await updateUserVotes(user.uid, id); // 🔹 Firestore 업데이트
-      alert(`✅ 투표 완료! ${project.team}조`);
-      navigate("/vote-complete");
-    } catch (error) {
-      console.error("🔥 투표 오류:", error);
-      alert(`⚠️ ${error.message}`);
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          const distance = getDistanceFromLatLonInKm(
+            latitude,
+            longitude,
+            EXHIBITION_COORDS.lat,
+            EXHIBITION_COORDS.lng
+          );
+
+          if (distance > 0.5) {
+            alert(
+              `⚠️ 현재 전시관에서 약 ${distance.toFixed(
+                2
+              )}km 떨어져 있습니다.\n현장 관람객이 아닌 경우 투표가 무효 처리될 수 있습니다.`
+            );
+          }
+
+          await updateUserVotes(user.uid, id); // 🔜 위치 정보 포함 저장 예정
+          alert(`✅ 투표 완료! ${project.team}조`);
+          navigate("/vote-complete");
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            // ✅ 위치 권한 거절 시 다시 안내
+            const retry = window.confirm(
+              "⚠️ 위치 정보 접근이 거부되었습니다.\n브라우저 설정에서 권한을 허용하신 후(사이트 설정 > 위치 > 허용 선택), 페이지를 새로고침하고 다시 시도해 주세요."
+            );
+            if (retry) {
+              handleVote(); // 사용자가 허용하고 다시 시도하는 경우 재귀 호출
+            }
+          } else {
+            alert("⚠️ 위치 정보를 가져오지 못했습니다. 다시 시도해주세요.");
+          }
+        }
+      );
+    } catch (err) {
+      alert("⚠️ 위치 접근 중 오류가 발생했습니다.");
     }
   };
 
@@ -151,6 +189,15 @@ const ProjectDetail = () => {
         >
           {userData?.votedProjects.includes(id) ? "이미 투표 완료" : "투표하기"}
         </button>
+
+        <p className="text-sm text-red-500 mt-4 text-center">
+          ※ 본 투표는 현장 관람객 전용입니다.
+          <br />
+          <strong>
+            전시관과 물리적으로 먼 거리에서 투표한 경우 <br /> 무효 처리될 수
+            있습니다.
+          </strong>
+        </p>
       </div>
 
       {/* 이미 투표한 경우 경고 모달 */}
