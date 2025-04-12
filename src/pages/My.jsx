@@ -32,8 +32,8 @@ const My = () => {
   const handleLogin = async () => {
     setLoginStatus("loading");
     try {
-      // await signInWithOIDC(); // 리디렉션 발생
-      await signInWithGoogle();
+      await signInWithOIDC(); // 리디렉션 발생
+      // await signInWithGoogle();
     } catch (error) {
       console.error("로그인 오류:", error);
       setLoginStatus("idle");

@@ -40,11 +40,12 @@ const Home = () => {
             <p className="text-gray-500 mt-4">데이터를 불러오는 중...</p>
           ) : (
             topProjects.map((project, index) => {
-              const medals = ["🥇", "🥈", "🥉"]; // 금, 은, 동 메달 이모지
+              const medals = ["🥇", "🥈", "🥉"];
+              const rankLabel = medals[index] || `${index + 1}위`;
+            
               return (
-                <p className="text-base md:text-lg font-medium mt-2">
-                  {medals[index]} [{project.team}조] {project.project} (
-                  {project.votes}표)
+                <p key={project.id} className="text-base md:text-lg font-medium mt-2">
+                  {rankLabel} [{project.team}조] {project.project} ({project.votes}표)
                 </p>
               );
             })

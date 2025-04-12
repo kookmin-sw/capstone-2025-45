@@ -7,7 +7,7 @@ const db = getFirestore(app);
 export const getTopProjects = async () => {
   try {
     const projectsRef = collection(db, "projects");
-    const topProjectsQuery = query(projectsRef, orderBy("votes", "desc"), limit(3));
+    const topProjectsQuery = query(projectsRef, orderBy("votes", "desc"), limit(10));
     const querySnapshot = await getDocs(topProjectsQuery);
 
     const topProjects = querySnapshot.docs.map((doc) => ({

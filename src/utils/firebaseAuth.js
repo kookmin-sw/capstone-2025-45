@@ -15,12 +15,12 @@ import { app } from "../firebase";
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export const signInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider).then((data) => {
-      console.log(data);
-    }).catch((err) => console.log(err));
-}
+// export const signInWithGoogle = async () => {
+//   const provider = new GoogleAuthProvider();
+//     await signInWithPopup(auth, provider).then((data) => {
+//       console.log(data);
+//     }).catch((err) => console.log(err));
+// }
 
 // 🔹 로그인 시도 (리디렉션 방식)
 export const signInWithOIDC = async () => {
