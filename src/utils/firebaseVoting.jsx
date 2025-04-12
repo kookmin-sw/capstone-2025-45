@@ -113,37 +113,79 @@ export const getUserVotes = async (userId) => {
 };
 
 // 🔹 Firestore에 투표 데이터 저장 및 프로젝트 투표 수 증가
-export const updateUserVotes = async (userId, projectId) => {
+// export const updateUserVotes = async (userId, projectId) => {
+//   const userRef = doc(db, "users", userId);
+//   const projectRef = doc(db, "projects", projectId);
+
+//   const userSnap = await getDoc(userRef);
+//   const projectSnap = await getDoc(projectRef);
+
+//   if (userSnap.exists() && projectSnap.exists()) {
+//     const userData = userSnap.data();
+//     const projectData = projectSnap.data();
+
+//     if (userData.votedProjects.includes(projectId)) {
+//       throw new Error("이미 투표한 프로젝트입니다.");
+//     }
+
+//     if (userData.votesRemaining <= 0) {
+//       throw new Error("투표 가능 횟수를 초과했습니다.");
+//     }
+
+//     // 🔹 사용자 투표 데이터 업데이트
+//     await updateDoc(userRef, {
+//       votesRemaining: userData.votesRemaining - 1,
+//       votedProjects: [...userData.votedProjects, projectId],
+//     });
+
+//     // 🔹 프로젝트 투표 수 증가
+//     await updateDoc(projectRef, {
+//       votes: (projectData.votes || 0) + 1
+//     });
+
+//   } else {
+//     throw new Error("사용자 또는 프로젝트 데이터를 찾을 수 없습니다.");
+//   }
+// };
+
+export const updateUserVotesWithLocation = async (userId, projectId, location, distance) => {
   const userRef = doc(db, "users", userId);
   const projectRef = doc(db, "projects", projectId);
 
   const userSnap = await getDoc(userRef);
   const projectSnap = await getDoc(projectRef);
 
-  if (userSnap.exists() && projectSnap.exists()) {
-    const userData = userSnap.data();
-    const projectData = projectSnap.data();
-
-    if (userData.votedProjects.includes(projectId)) {
-      throw new Error("이미 투표한 프로젝트입니다.");
-    }
-
-    if (userData.votesRemaining <= 0) {
-      throw new Error("투표 가능 횟수를 초과했습니다.");
-    }
-
-    // 🔹 사용자 투표 데이터 업데이트
-    await updateDoc(userRef, {
-      votesRemaining: userData.votesRemaining - 1,
-      votedProjects: [...userData.votedProjects, projectId],
-    });
-
-    // 🔹 프로젝트 투표 수 증가
-    await updateDoc(projectRef, {
-      votes: (projectData.votes || 0) + 1
-    });
-
-  } else {
+  if (!userSnap.exists() || !projectSnap.exists()) {
     throw new Error("사용자 또는 프로젝트 데이터를 찾을 수 없습니다.");
   }
+
+  const userData = userSnap.data();
+  const projectData = projectSnap.data();
+
+  if (userData.votedProjects.includes(projectId)) {
+    throw new Error("이미 투표한 프로젝트입니다.");
+  }
+
+  if (userData.votesRemaining <= 0) {
+    throw new Error("투표 가능 횟수를 초과했습니다.");
+  }
+
+  const voteEntry = {
+    projectId,
+    timestamp: Date.now(),
+    location,
+    distance,
+  };
+
+  // 🔄 사용자 데이터 업데이트
+  await updateDoc(userRef, {
+    votesRemaining: userData.votesRemaining - 1,
+    votedProjects: [...userData.votedProjects, projectId],
+    votes: [...(userData.votes || []), voteEntry],
+  });
+
+  // 🔄 프로젝트 투표 수 증가
+  await updateDoc(projectRef, {
+    votes: (projectData.votes || 0) + 1,
+  });
 };

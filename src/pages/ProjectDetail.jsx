@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   getProjectById,
-  updateUserVotes,
+  updateUserVotesWithLocation,
   getUserData,
 } from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -92,7 +92,7 @@ const ProjectDetail = () => {
     }
 
     if (!qrToken || qrToken !== project.validToken) {
-      alert("⚠️ QR 코드 인식을 통해 입장해야 투표할 수 있어요.");
+      alert("⚠️ 각 프로젝트 QR 인식을 통해 입장해야 투표할 수 있어요.");
       return;
     }
 
@@ -132,7 +132,7 @@ const ProjectDetail = () => {
             );
           }
 
-          await updateUserVotes(user.uid, id); // 🔜 위치 정보 포함 저장 예정
+          await updateUserVotesWithLocation(user.uid, id, { lat: latitude, lng: longitude }, distance);
           alert(`✅ 투표 완료! ${project.team}조`);
           navigate("/vote-complete");
         },
