@@ -4,7 +4,6 @@ import ProjectDetail from "./pages/ProjectDetail";
 import VoteComplete from "./pages/VoteComplete";
 import Projects from "./pages/Projects";
 import My from "./pages/My";
-import NavigationBar from "./components/NavigationBar";
 import { useEffect } from "react";
 import {
   handleRedirectLoginResult,
@@ -17,7 +16,8 @@ import SimpleProjects from "./pages/SimpleProjects";
 import SimpleProjectDetail from "./pages/SimpleProjectDetail";
 import SimpleVoteComplete from "./pages/SimpleVoteComplete";
 import SimpleHome from "./pages/SimpleHome";
-import SimpleNavigationBar from "./components/SimpleNavigationBar";
+import ProfessorList from "./pages/ProfessorList";
+import ProfessorDetail from "./pages/ProfessorDetail";
 
 const App = () => {
   useEffect(() => {
@@ -67,10 +67,9 @@ const App = () => {
           <Route path="/simple/projects" element={<SimpleProjects />} />
           <Route path="/simple/project/:id" element={<SimpleProjectDetail />} />
           <Route path="/simple/complete" element={<SimpleVoteComplete />} />
+          <Route path="/proff" element={<ProfessorList />} />
+          <Route path="/proff/:profId" element={<ProfessorDetail />} />
         </Routes>
-        {/* <NavigationBar /> 
-        
-        <SimpleNavigationBar /> */}
       </div>
     </Router>
   );

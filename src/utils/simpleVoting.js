@@ -45,4 +45,3 @@ export const getTopSimpleProjects = async () => {
     ...doc.data()
   }));
 };
-
