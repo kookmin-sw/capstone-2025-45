@@ -6,12 +6,20 @@ import Projects from "./pages/Projects";
 import My from "./pages/My";
 import NavigationBar from "./components/NavigationBar";
 import { useEffect } from "react";
-import { handleRedirectLoginResult, saveUserToFirestore, sendTokenToKookmin } from "./utils/firebaseAuth";
+import {
+  handleRedirectLoginResult,
+  saveUserToFirestore,
+  sendTokenToKookmin,
+} from "./utils/firebaseAuth";
 import { getRedirectResult, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import SimpleProjects from "./pages/SimpleProjects";
+import SimpleProjectDetail from "./pages/SimpleProjectDetail";
+import SimpleVoteComplete from "./pages/SimpleVoteComplete";
+import SimpleHome from "./pages/SimpleHome";
+import SimpleNavigationBar from "./components/SimpleNavigationBar";
 
 const App = () => {
-  
   useEffect(() => {
     const handleLogin = async () => {
       try {
@@ -44,8 +52,6 @@ const App = () => {
     handleLogin();
   }, []);
 
-  
-
   return (
     <Router>
       <div className="pb-16">
@@ -57,8 +63,14 @@ const App = () => {
           <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/my" element={<My />} />
           <Route path="/vote-complete" element={<VoteComplete />} />
+          <Route path="/simple" element={<SimpleHome />} />
+          <Route path="/simple/projects" element={<SimpleProjects />} />
+          <Route path="/simple/project/:id" element={<SimpleProjectDetail />} />
+          <Route path="/simple/complete" element={<SimpleVoteComplete />} />
         </Routes>
-        <NavigationBar /> {/* 하단 네비게이션 바 추가 */}
+        {/* <NavigationBar /> 
+        
+        <SimpleNavigationBar /> */}
       </div>
     </Router>
   );

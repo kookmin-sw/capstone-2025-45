@@ -11,6 +11,7 @@ import {
   getDistanceFromLatLonInKm,
   EXHIBITION_COORDS,
 } from "../utils/geoUtils";
+import NavigationBar from "../components/NavigationBar";
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -153,6 +154,7 @@ const ProjectDetail = () => {
   };
 
   return (
+    <div className="pb-20">
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <button
         onClick={() => navigate("/")}
@@ -216,6 +218,8 @@ const ProjectDetail = () => {
           </div>
         </div>
       )}
+    </div>
+    <NavigationBar />
     </div>
   );
 };

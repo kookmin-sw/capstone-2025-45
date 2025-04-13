@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getUserVotes } from "../utils/firebaseVoting";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { signInWithGoogle, signInWithOIDC, signOutUser } from "../utils/firebaseAuth";
+import { signInWithOIDC, signOutUser } from "../utils/firebaseAuth";
+import NavigationBar from "../components/NavigationBar";
 
 const My = () => {
   const [votedProjects, setVotedProjects] = useState([]);
@@ -46,6 +47,7 @@ const My = () => {
   };
 
   return (
+    <div className="pb-20">
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-2xl font-bold mb-4">내 투표 현황</h1>
 
@@ -100,6 +102,8 @@ const My = () => {
           </button>
         </>
       )}
+    </div>
+    <NavigationBar />
     </div>
   );
 };

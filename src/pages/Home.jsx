@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTopProjects } from "../utils/firebaseVoting";
+import NavigationBar from "../components/NavigationBar";
 
 const Home = () => {
   const [topProjects, setTopProjects] = useState([]);
@@ -21,6 +22,7 @@ const Home = () => {
   }, []);
 
   return (
+    <div className="pb-20">
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="w-full max-w-md flex flex-col items-center text-center">
         <h1 className="text-2xl md:text-3xl font-bold mb-4">
@@ -52,6 +54,8 @@ const Home = () => {
           )}
         </div>
       </div>
+    </div>
+    <NavigationBar />
     </div>
   );
 };
