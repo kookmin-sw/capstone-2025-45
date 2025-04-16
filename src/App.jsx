@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import {
   handleRedirectLoginResult,
   saveUserToFirestore,
-  sendTokenToKookmin,
+  // sendTokenToKookmin,
 } from "./utils/firebaseAuth";
 import { getRedirectResult, onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
@@ -28,7 +28,7 @@ const App = () => {
         if (result?.user) {
           console.log("✅ getRedirectResult 로그인 성공:", result.user);
           await saveUserToFirestore(result.user);
-          await sendTokenToKookmin(result.user);
+          // await sendTokenToKookmin(result.user);
           return;
         }
 
@@ -37,7 +37,7 @@ const App = () => {
           if (user) {
             console.log("✅ fallback 로그인된 사용자:", user);
             await saveUserToFirestore(user); // 이 경우에도 저장되도록 보장
-            await sendTokenToKookmin(user);
+            // await sendTokenToKookmin(user);
           } else {
             console.log("❌ 로그인된 사용자 없음");
           }

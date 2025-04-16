@@ -68,7 +68,7 @@ export const handleRedirectLoginResult = async () => {
 export const postLoginProcess = async (user) => {
   try {
     await saveUserToFirestore(user);
-    await sendTokenToKookmin(user);
+    // await sendTokenToKookmin(user);
   } catch (err) {
     console.error("❌ 로그인 후 처리 실패:", err);
   }
@@ -93,27 +93,27 @@ export const saveUserToFirestore = async (user) => {
 };
 
 // 🔹 Kookmin 서버로 Firebase ID Token 전송
-export const sendTokenToKookmin = async (user) => {
-  try {
-    const idToken = await user.getIdToken();
-    const res = await fetch(
-      "https://kconnect.cs.kookmin.ac.kr/account/users/jwt/auth/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: idToken }),
-      }
-    );
+// export const sendTokenToKookmin = async (user) => {
+//   try {
+//     const idToken = await user.getIdToken();
+//     const res = await fetch(
+//       "https://kconnect.cs.kookmin.ac.kr/account/users/jwt/auth/",
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ token: idToken }),
+//       }
+//     );
 
-    if (!res.ok) throw new Error("서버 인증 실패");
-    const data = await res.json();
-    console.log("✅ Kookmin 서버 인증 성공:", data);
-  } catch (err) {
-    console.error("❌ Kookmin 서버 인증 실패:", err);
-  }
-};
+//     if (!res.ok) throw new Error("서버 인증 실패");
+//     const data = await res.json();
+//     console.log("✅ Kookmin 서버 인증 성공:", data);
+//   } catch (err) {
+//     console.error("❌ Kookmin 서버 인증 실패:", err);
+//   }
+// };
 
 // 🔹 로그아웃
 export const signOutUser = async () => {
