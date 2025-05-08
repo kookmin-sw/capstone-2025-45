@@ -3,7 +3,7 @@
 ![image](https://github.com/user-attachments/assets/4cadd5d3-1ea3-43a7-8ced-d60c7ec00fdb)
 
 
-### 1. 프로잭트 소개
+### 1. 프로젝트 소개
 
 **CapVote** is an on-site voting system designed for university capstone exhibitions. It provides secure student authentication, QR-based access, GPS validation, and real-time vote tracking, along with streamlined admin tools for efficient operation and reuse.
 
