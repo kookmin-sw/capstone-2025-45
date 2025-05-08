@@ -6,7 +6,7 @@ import Projects from "./pages/Projects";
 import My from "./pages/My";
 import { useEffect } from "react";
 import {
-  handleRedirectLoginResult,
+  // handleRedirectLoginResult,
   saveUserToFirestore,
   // sendTokenToKookmin,
 } from "./utils/firebaseAuth";
@@ -24,7 +24,9 @@ const App = () => {
     const handleLogin = async () => {
       try {
         // 1️⃣ 리디렉션 결과 우선 처리
+        console.log("🔄 redirect result 체크 시작");
         const result = await getRedirectResult(auth);
+        console.log("🔍 redirect 결과:", result);
         if (result?.user) {
           console.log("✅ getRedirectResult 로그인 성공:", result.user);
           await saveUserToFirestore(result.user);
@@ -39,7 +41,8 @@ const App = () => {
             await saveUserToFirestore(user); // 이 경우에도 저장되도록 보장
             // await sendTokenToKookmin(user);
           } else {
-            console.log("❌ 로그인된 사용자 없음");
+            console.log("hihi");
+            console.log("❌ 로그인된 사용자 없음!!");
           }
         });
 

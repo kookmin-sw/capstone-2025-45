@@ -5,28 +5,20 @@ import {
   OAuthProvider,
   signOut,
   onAuthStateChanged,
-  signInWithPopup,
-  GoogleAuthProvider
+  // signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { app } from "../firebase";
-// import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// export const signInWithGoogle = async () => {
-//   const provider = new GoogleAuthProvider();
-//     await signInWithPopup(auth, provider).then((data) => {
-//       console.log(data);
-//     }).catch((err) => console.log(err));
-// }
-
-// 🔹 로그인 시도 (리디렉션 방식)
+// 🔹 OIDC 로그인 - 리디렉션 방식 사용
 export const signInWithOIDC = async () => {
   try {
     const provider = new OAuthProvider("oidc.kconnect.cs.kookmin.ac.kr");
-    await signInWithRedirect(auth, provider);
+    await signInWithRedirect(auth, provider); // ✅ 변경된 부분
   } catch (error) {
     console.error("🔥 OIDC 로그인 리디렉션 오류:", error);
     throw error;
@@ -34,35 +26,36 @@ export const signInWithOIDC = async () => {
 };
 
 // 🔹 로그인 결과 처리 (App.jsx에서 호출)
-export const handleRedirectLoginResult = async () => {
-  try {
-    // 1. 리디렉션 결과 확인
-    const result = await getRedirectResult(auth);
-    if (result?.user) {
-      console.log("✅ getRedirectResult 로그인 성공:", result.user);
-      await postLoginProcess(result.user);
-      return result.user;
-    }
+// export const handleRedirectLoginResult = async () => {
+//   try {
+//     // 1. 리디렉션 결과 확인
+//     const result = await getRedirectResult(auth);
+//     if (result?.user) {
+//       console.log("✅ getRedirectResult 로그인 성공:", result.user);
+//       await postLoginProcess(result.user);
+//       return result.user;
+//     }
 
-    // 2. fallback: onAuthStateChanged (로그인 유지 상태 등)
-    return new Promise((resolve) => {
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        unsubscribe();
-        if (user) {
-          console.log("✅ fallback 로그인 성공:", user);
-          await postLoginProcess(user);
-          resolve(user);
-        } else {
-          console.log("❌ 로그인된 사용자 없음");
-          resolve(null);
-        }
-      });
-    });
-  } catch (error) {
-    console.error("🔥 리디렉션 결과 처리 오류:", error);
-    return null;
-  }
-};
+//     // 2. fallback: onAuthStateChanged (로그인 유지 상태 등)
+//     return new Promise((resolve) => {
+//       const unsubscribe = onAuthStateChanged(auth, async (user) => {
+//         unsubscribe();
+//         if (user) {
+//           console.log("✅ fallback 로그인 성공:", user);
+//           await postLoginProcess(user);
+//           resolve(user);
+//         } else {
+//           console.log("nono");
+//           console.log("❌ 로그인된 사용자 없음");
+//           resolve(null);
+//         }
+//       });
+//     });
+//   } catch (error) {
+//     console.error("🔥 리디렉션 결과 처리 오류:", error);
+//     return null;
+//   }
+// };
 
 // 🔹 로그인 후 공통 처리: Firestore + 서버 전송
 export const postLoginProcess = async (user) => {
@@ -91,29 +84,6 @@ export const saveUserToFirestore = async (user) => {
     console.log("✅ Firestore 사용자 저장 완료");
   }
 };
-
-// 🔹 Kookmin 서버로 Firebase ID Token 전송
-// export const sendTokenToKookmin = async (user) => {
-//   try {
-//     const idToken = await user.getIdToken();
-//     const res = await fetch(
-//       "https://kconnect.cs.kookmin.ac.kr/account/users/jwt/auth/",
-//       {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({ token: idToken }),
-//       }
-//     );
-
-//     if (!res.ok) throw new Error("서버 인증 실패");
-//     const data = await res.json();
-//     console.log("✅ Kookmin 서버 인증 성공:", data);
-//   } catch (err) {
-//     console.error("❌ Kookmin 서버 인증 실패:", err);
-//   }
-// };
 
 // 🔹 로그아웃
 export const signOutUser = async () => {

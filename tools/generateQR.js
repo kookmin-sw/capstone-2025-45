@@ -22,7 +22,7 @@ const tokenData = [];
 
 projects.forEach(async ({ id }) => {
   const token = generateToken();
-  const url = `https://kmu-capstone-vote.web.app/project/${id}?qr=${token}`;
+  const url = `https://kmu-capstone-vote.firebaseapp.com/project/${id}?qr=${token}`;
   const outputPath = path.join(outputDir, `project-${id}.png`);
 
   try {
