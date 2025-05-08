@@ -26,4 +26,4 @@ My role included planning, system architecture, frontend/backend development, Fi
 ### 4. 사용법
 
 If you're planning to reuse the system for next year, 
-check the Admin Guide(README) inside /tools for installation instructions.
+check the [Admin Guide(README) inside /tools](https://github.com/kookmin-sw/capstone-2025-45/blob/main/tools/README.md) for installation instructions.
